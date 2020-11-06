@@ -12,6 +12,17 @@ module.exports = {
     compress: true,
     port: 9000
   },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: '/node_modules/',
+        use: {
+          loader: 'babel-loader'
+        }
+      }
+    ]
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Object Edge - Address Book',
