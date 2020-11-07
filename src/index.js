@@ -1,14 +1,12 @@
 import React from 'react';
 import ReactDom from 'react-dom';
-import { Button } from '@material-ui/core';
+import AddressBook from './Components/AddressBook';
 
-export const Hello = () => {
+export const App = () => {
   return(
-    <Button variant="contained" color="primary">
-      Yo! That's your first component with Material dude!
-    </Button>
+    <AddressBook />
   );
 };
 
 const root = document.getElementById('root');
-root ? ReactDom.render(<Hello />, root) : false;
+root ? ReactDom.render(<App />, root) : false;
