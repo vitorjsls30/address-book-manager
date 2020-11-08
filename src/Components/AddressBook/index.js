@@ -31,11 +31,11 @@ export default function addressBook () {
             <CardHeader 
               title={<Typography variant="h5" component="h2">My first Address</Typography>}
               action={<FormControlLabel 
-                control={<Radio value="my-address" checked={true} color="primary" />}
+                control={<Radio value="my-address" checked={false} color="primary" />}
               />}
             />
             <CardContent className={classes.content}>
-              <Typography variant="body1">Sorocaba Street, 412, Apartment 01</Typography>
+              <Typography variant="body1">Sorocaba Street, 412, Apartment 01, 13339-390</Typography>
               <Typography variant="subtitle1" component="p">Indaituba - SP</Typography>
             </CardContent>
             <CardActions>
