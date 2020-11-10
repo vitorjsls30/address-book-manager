@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -32,6 +32,14 @@ const useStyles = makeStyles({
 
 export default function AddressItem() {
   const classes = useStyles();
+
+  const [billing, setBilling] = useState(false);
+  const [shipping, setShipping] = useState(false);
+
+  const handleCheck = (event, handlerFn) => {
+    handlerFn(event.target.checked);
+  };
+
   return(
     <FormControl>
       <Card className={classes.root}>
@@ -57,12 +65,14 @@ export default function AddressItem() {
         <CardActions>
             <FormGroup row={true} >
               <FormControlLabel 
-                control={<Checkbox checked={false} name="shipping" />}
+                control={<Checkbox checked={shipping} name="shipping" />}
                 label="Shipping"
+                onClick={(e) => handleCheck(e, setShipping)}
               />
               <FormControlLabel 
-                control={<Checkbox checked={false} name="billing" />}
+                control={<Checkbox checked={billing} name="billing" />}
                 label="Billing"
+                onClick={(e) => handleCheck(e, setBilling)}
               />
             </FormGroup>
         </CardActions>
