@@ -5,7 +5,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'main.js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'public')
   },
   module: {
     rules: [
@@ -21,7 +21,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Object Edge - Address Book',
-      template: './dist/index.html'
+      template: './public/index.html'
     })
   ]
 }
