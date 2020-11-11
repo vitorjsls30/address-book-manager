@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: { minHeight: 20 },
   menuIcon: { marginRight: theme.spacing(2) },
   title: { flexGrow: 1 }
-}));
+}, { index: 1 }));
 
 
 export const App = () => {
