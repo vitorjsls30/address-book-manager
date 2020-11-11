@@ -4,8 +4,8 @@
   "description": "Object Edge AddressBook Frontend Challenge",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack serve"
+    "dev": "webpack serve --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.prod.js"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,8 @@
     "html-webpack-plugin": "^4.5.0",
     "webpack": "^5.4.0",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.3.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
