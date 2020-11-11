@@ -28,7 +28,7 @@ const useStyles = makeStyles({
   actions: {
     padding: 5 
   }
-});
+}, { index: 1 });
 
 export default function AddressItem() {
   const classes = useStyles();
