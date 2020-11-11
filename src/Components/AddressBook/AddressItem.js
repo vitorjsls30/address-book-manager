@@ -13,6 +13,7 @@ import Radio from '@material-ui/core/Radio';
 import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
+import DeleteModal from '../DeleteModal';
 
 const useStyles = makeStyles({
   root: { 
@@ -34,10 +35,15 @@ export default function AddressItem() {
 
   const [billing, setBilling] = useState(false);
   const [shipping, setShipping] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleCheck = (event, handlerFn) => {
     handlerFn(event.target.checked);
   };
+
+  const handleDeleteOpen = () => {
+    setOpen(true);
+  }
 
   return(
     <FormControl>
@@ -54,7 +60,7 @@ export default function AddressItem() {
           <IconButton color="inherit" className={classes.actions}>
             <Edit />
           </IconButton>
-          <IconButton color="inherit" className={classes.actions}>
+          <IconButton color="inherit" className={classes.actions} onClick={handleDeleteOpen}>
             <Delete />
           </IconButton>
           <Typography variant="body1">Sorocaba Street, 412, Apartment 01, 13339-390</Typography>
@@ -76,6 +82,7 @@ export default function AddressItem() {
             </FormGroup>
         </CardActions>
       </Card>
+      <DeleteModal open={open} handleOpen={setOpen}/>
     </FormControl>
   );
 }
