@@ -70,8 +70,8 @@ export const App = () => {
         </Toolbar>
       </AppBar>
       <div className={classes.appBarSpacer}></div>
-      {/* <AddressBook /> */}
-      <AddAddress />
+      <AddressBook />
+      {/* <AddAddress /> */}
     </div>
   );
 };
