@@ -70,14 +70,12 @@ export default function AddressItem() {
         <CardActions>
             <FormGroup row={true} >
               <FormControlLabel 
-                control={<Checkbox checked={shipping} name="shipping" />}
+                control={<Checkbox checked={shipping} name="shipping" onChange={(e) => handleCheck(e, setShipping)} />}
                 label="Shipping"
-                onClick={(e) => handleCheck(e, setShipping)}
               />
               <FormControlLabel 
-                control={<Checkbox checked={billing} name="billing" />}
+                control={<Checkbox checked={billing} name="billing" onChange={(e) => handleCheck(e, setBilling)} />}
                 label="Billing"
-                onClick={(e) => handleCheck(e, setBilling)}
               />
             </FormGroup>
         </CardActions>
