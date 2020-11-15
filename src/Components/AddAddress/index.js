@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -22,8 +22,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function AddAddress() {
+export default function AddAddress(props) {
+  const { titleSetter } = props;
   const classes = useStyles();
+
+  useEffect(() => {
+    titleSetter('Add an Address');
+  });
 
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
