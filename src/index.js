@@ -10,8 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
-// import AddressBook from './Components/AddressBook';
-import AddAddress from './Components/AddAddress';
+import AddressBook from './Components/AddressBook';
+// import AddAddress from './Components/AddAddress';
 
 const useStyles = makeStyles((theme) => ({
   root: { flexGrow: 1 },
