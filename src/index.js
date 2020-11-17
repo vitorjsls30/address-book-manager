@@ -20,7 +20,7 @@ import {
 } from 'react-router-dom';
 
 import AddressBook from './Components/AddressBook';
-import AddAddress from './Components/AddAddress';
+import Address from './Components/Address';
 
 const useStyles = makeStyles((theme) => ({
   root: { flexGrow: 1 },
@@ -64,7 +64,7 @@ export const App = () => {
                 <Link className={classes.menuItem}  to="/">Manage Addresses</Link>
               </MenuItem>
               <MenuItem onClick={() => handleClose(setAnchorEl)}>
-                <Link className={classes.menuItem} to="/AddAddress">Add Address</Link>
+                <Link className={classes.menuItem} to="/Address">Add Address</Link>
               </MenuItem>
             </Menu>
             <Typography variant="h6" className={classes.title}>
@@ -90,8 +90,11 @@ export const App = () => {
           <Route key="1" exact path="/">
             <AddressBook titleSetter={setAppBarTitle} />
           </Route>
-          <Route key="2" path="/AddAddress">
-            <AddAddress titleSetter={setAppBarTitle} />
+          <Route key="3" path="/Address/:id">
+            <Address titleSetter={() => setAppBarTitle('Update Address')} />
+          </Route>
+          <Route key="2" path="/Address">
+            <Address titleSetter={() => setAppBarTitle('Add an Address')} />
           </Route>
         </Switch>
       </Router>

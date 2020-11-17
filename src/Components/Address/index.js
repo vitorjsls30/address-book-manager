@@ -22,12 +22,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function AddAddress(props) {
+export default function Address(props) {
   const { titleSetter } = props;
   const classes = useStyles();
 
   useEffect(() => {
-    titleSetter('Add an Address');
+    titleSetter();
   });
 
   const [name, setName] = useState('');

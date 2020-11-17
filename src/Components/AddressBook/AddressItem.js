@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import DeleteModal from '../DeleteModal';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: { 
@@ -58,7 +59,9 @@ export default function AddressItem() {
 
         <CardContent className={classes.content}>
           <IconButton color="inherit" className={classes.actions}>
-            <Edit />
+            <Link to={`Address/1`}>
+              <Edit />
+            </Link>
           </IconButton>
           <IconButton color="inherit" className={classes.actions} onClick={handleDeleteOpen}>
             <Delete />
