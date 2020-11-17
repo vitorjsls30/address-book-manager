@@ -60,11 +60,11 @@ export const App = () => {
               open={Boolean(anchorEl)}
               onClose={() => handleClose(setAnchorEl)}
             >
-              <MenuItem onClick={() => handleClose(setAnchorEl)}>
-                <Link className={classes.menuItem}  to="/">Manage Addresses</Link>
+              <MenuItem component={Link} to="/" onClick={() => handleClose(setAnchorEl)}>
+                Manage Addresses
               </MenuItem>
-              <MenuItem onClick={() => handleClose(setAnchorEl)}>
-                <Link className={classes.menuItem} to="/Address">Add Address</Link>
+              <MenuItem  component={Link} to="/Address" onClick={() => handleClose(setAnchorEl)}>
+                Add Address
               </MenuItem>
             </Menu>
             <Typography variant="h6" className={classes.title}>
