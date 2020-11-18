@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import DeleteModal from '../DeleteModal';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: { 
@@ -26,12 +27,13 @@ const useStyles = makeStyles({
     padding: 12
   },
   actions: {
-    padding: 5 
+    padding: 5
   }
 });
 
-export default function AddressItem() {
+export default function AddressItem(props) {
   const classes = useStyles();
+  const { selected, handleSelected, addressId } = props;
 
   const [billing, setBilling] = useState(false);
   const [shipping, setShipping] = useState(false);
@@ -51,13 +53,13 @@ export default function AddressItem() {
         <CardHeader 
           title={<Typography variant="h5" component="h2">My first Address</Typography>}
           action={
-            <FormControlLabel control={<Radio value="my-address" checked={false} color="primary" />} />
+            <FormControlLabel control={<Radio name="address" value="my-address" checked={selected === addressId} onChange={handleSelected} color="primary" />} />
           }
           className={classes.header}
         />
 
         <CardContent className={classes.content}>
-          <IconButton color="inherit" className={classes.actions}>
+          <IconButton component={Link} to={`Address/${addressId}`}  color="inherit" className={classes.actions}>
             <Edit />
           </IconButton>
           <IconButton color="inherit" className={classes.actions} onClick={handleDeleteOpen}>
