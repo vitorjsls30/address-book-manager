@@ -9,6 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import MaskedInput from 'react-text-mask';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -23,6 +24,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end'
   }
 }));
+
+const TextFieldCustom = (props) => {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput 
+      {...other}
+      ref={(ref) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[/\d/, /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+      placeholderChar={'_'}
+    />
+  );
+};
 
 export default function Address(props) {
   const { titleSetter } = props;
@@ -116,8 +132,15 @@ export default function Address(props) {
                 </TextField>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField id="zip-code" name="zipCode" label="Zip Code" placeholder="Wich ZIP code?" 
-                  value={formData['zipCode']} onChange={handleChange} error={errors['zipCode']}/>
+                <TextField id="zip-code" 
+                  name="zipCode" 
+                  label="Zip Code" 
+                  placeholder="Wich ZIP code?" 
+                  value={formData['zipCode']} 
+                  onChange={handleChange} 
+                  error={errors['zipCode']}
+                  InputProps={{ inputComponent: TextFieldCustom }}
+                />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FormControl required error={errors['shipping'] && errors['billing']}>
