@@ -44,71 +44,64 @@ export default function Address(props) {
   const { titleSetter } = props;
   const classes = useStyles();
 
-  useEffect(() => {
-    titleSetter();
-  });
-
-  const [formData, setFormData] = useState({ 
+  const initialValues = {
     name: '',
     address: '',
     zipCode: '',
     cityUF: '',
     shipping: false,
     billing: false
+  };
+  Object.freeze(initialValues);
+
+  useEffect(() => {
+    titleSetter();
   });
 
-  const [errors, setErrors] = useState({ 
-    name: false,
-    address: false,
-    zipCode: false,
-    cityUF: false,
-    shipping: false,
-    billing: false
-  });
+  const [formData, setFormData] = useState(initialValues);
 
-  const handleCheck = (event) => {
-    setFormData({...formData, [event.target.name]: event.target.checked});
-  }
+  const [errors, setErrors] = useState({});
 
   const handleChange = (event) => {
-    setFormData({...formData, [event.target.name]: event.target.value});
+    const value = !!event.target.checked ? event.target.checked : event.target.value;
+    setFormData({ ...formData, [event.target.name]: value });
+    setErrors({ ...errors, [event.target.name]: false });
   }
 
   const clearData = () => {
-    setFormData({ 
-      name: '',
-      address: '',
-      zipCode: '',
-      cityUF: '',
-      shipping: false,
-      billing: false
-     });
+    setFormData(initialValues);
   }
 
   const saveData = () => {
+    console.log('Yo! your form is valid!! Go go go!');
   }
+
+  const isValid = () => {
+    const required = ['name', 'address', 'cityUF', 'zipCode'];
+    let validateErrs = {};
+
+    required.forEach(item => {
+      if(!formData[item]) {
+        validateErrs = { ...validateErrs, [item]: true};
+      }
+    });
+
+    if(!formData['shipping'] && !formData['billing']) {
+      validateErrs = { ...validateErrs, 'shipping': true, 'billing': true };
+    }
+
+    setErrors(prevState => {
+      return {...prevState, ...validateErrs}
+    });
+    return !Object.keys(validateErrs).length;
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    setErrors({
-      name: false,
-      address: false,
-      zipCode: false,
-      cityUF: false,
-      shipping: false,
-      billing: false
-    });
-
-    const required = ['name', 'address', 'cityUF', 'zipCode', 'shipping', 'billing'];
-    required.forEach(item => {
-      if(!formData[item]) {
-        setErrors(prevState => {
-          return {...prevState, [item]: true}
-        });
-      }
-    });
-    
+    if(isValid()) {
+      saveData();
+    }
   }
 
   return(
@@ -147,11 +140,11 @@ export default function Address(props) {
                   <FormLabel component="legend">Pick at Least One</FormLabel>
                   <FormGroup row={true}>
                     <FormControlLabel 
-                      control={<Checkbox name="shipping" checked={formData['shipping']} onChange={handleCheck} />}
+                      control={<Checkbox name="shipping" checked={formData['shipping']} onChange={handleChange} />}
                       label="Ship to this Address?"
                     />
                     <FormControlLabel 
-                      control={<Checkbox name="billing" checked={formData['billing']} onChange={handleCheck} />}
+                      control={<Checkbox name="billing" checked={formData['billing']} onChange={handleChange} />}
                       label="Billing Address?"
                     />
                   </FormGroup>
@@ -162,7 +155,7 @@ export default function Address(props) {
                   <Button id="clear-btn" onClick={clearData} >
                     Clear
                   </Button>
-                  <Button id="clear-btn" onClick={saveData} color="primary" variant="contained" type="submit">
+                  <Button id="save-btn" color="primary" variant="contained" type="submit">
                     Save
                   </Button>
                 </div>
