@@ -1,7 +1,7 @@
 {
   "name": "object-edge-challenge",
   "version": "1.0.0",
-  "description": "Object Edge AddressBook Frontend Challenge",
+  "description": "AddressBook Manager Application with all the good stuff: Babel, Webpack, React, React-Router and Redux",
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --config webpack.config.dev.js",

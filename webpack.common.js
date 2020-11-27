@@ -21,7 +21,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'Object Edge - Address Book',
+      title: 'Address Book Manager',
       template: './src/index.html'
     })
   ]
