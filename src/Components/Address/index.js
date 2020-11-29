@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
+import { regularName, zipCode } from '../Common/Validation';
 
 export default function Address(props) {
   const { titleSetter } = props;
@@ -37,12 +38,19 @@ export default function Address(props) {
   }
 
   const isValid = () => {
-    const required = ['name', 'address', 'cityUF', 'zipCode'];
+    const validations = {
+      name: regularName,
+      address: regularName,
+      cityUF: (value) => value == '',
+      zipCode: zipCode
+    }
+    const required = Object.entries(validations);
     let validateErrs = {};
 
     required.forEach(item => {
-      if(!formData[item]) {
-        validateErrs = { ...validateErrs, [item]: true};
+      const [field, validation] = item;
+      if(validation(formData[field])) {
+        validateErrs = { ...validateErrs, [field]: true};
       }
     });
 
