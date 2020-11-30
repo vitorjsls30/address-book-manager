@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
 import { regularName, zipCode } from '../Common/Validation';
+import { useHistory } from 'react-router-dom';
 
 export default function Address(props) {
   const { titleSetter } = props;
@@ -20,11 +21,17 @@ export default function Address(props) {
   });
 
   const [formData, setFormData] = useState(initialValues);
-
   const [errors, setErrors] = useState({});
+  const history = useHistory();
+
 
   const handleChange = (event) => {
-    const value = !!event.target.checked ? event.target.checked : event.target.value;
+    let value = event.target.value;
+    
+    if(event.target.type == 'checkbox') {
+      value = event.target.checked;
+    }
+
     setFormData({ ...formData, [event.target.name]: value });
     setErrors({ ...errors, [event.target.name]: false });
   }
@@ -34,7 +41,16 @@ export default function Address(props) {
   }
 
   const saveData = () => {
-    console.log('Yo! your form is valid!! Go go go!');
+    if(!window.localStorage) {
+      return;
+    }
+
+    let items = JSON.parse(window.localStorage.getItem('adb-manager')) || {};
+    const addresses = !!items && items.hasOwnProperty('address')? items['address'] : [];
+    items = { address: [...addresses, formData] };
+    window.localStorage.setItem('adb-manager', JSON.stringify(items));
+    // TODO - INFORM THE USER BEFORE REDIRECT...
+    history.replace('/');
   }
 
   const isValid = () => {
@@ -55,7 +71,7 @@ export default function Address(props) {
     });
 
     if(!formData['shipping'] && !formData['billing']) {
-      validateErrs = { ...validateErrs, 'shipping': true, 'billing': true };
+      validateErrs = { ...validateErrs, shipping: true, billing: true };
     }
 
     setErrors(prevState => {
