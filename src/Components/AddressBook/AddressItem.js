@@ -33,8 +33,10 @@ const useStyles = makeStyles({
 
 export default function AddressItem(props) {
   const classes = useStyles();
+  // TODO - use the address prop to populate the Address Information bellow...
   const { selected, handleSelected, addressId } = props;
 
+  // TODO - check the item based on the prop info...
   const [billing, setBilling] = useState(false);
   const [shipping, setShipping] = useState(false);
   const [open, setOpen] = useState(false);
