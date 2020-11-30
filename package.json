@@ -1,7 +1,7 @@
 {
   "name": "object-edge-challenge",
   "version": "1.0.0",
-  "description": "Object Edge AddressBook Frontend Challenge",
+  "description": "AddressBook Manager Application with all the good stuff: Babel, Webpack, React, React-Router and Redux",
   "main": "index.js",
   "scripts": {
     "dev": "webpack serve --config webpack.config.dev.js",
@@ -34,6 +34,8 @@
     "@material-ui/icons": "^4.9.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0"
+    "react-imask": "^6.0.5",
+    "react-router-dom": "^5.2.0",
+    "react-text-mask": "^5.4.3"
   }
 }

@@ -14,9 +14,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Link,
-  Route,
-  useRouteMatch,
-  useParams
+  Route
 } from 'react-router-dom';
 
 import AddressBook from './Components/AddressBook';
