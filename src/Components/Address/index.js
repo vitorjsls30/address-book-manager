@@ -11,7 +11,8 @@ export default function Address(props) {
     name: '',
     address: '',
     zipCode: '',
-    cityUF: '',
+    city: '',
+    uf: '',
     shipping: false,
     billing: false
   };
@@ -50,6 +51,7 @@ export default function Address(props) {
     const addresses = !!items && items.hasOwnProperty('address')? items['address'] : [];
     items = { address: [...addresses, formData] };
     window.localStorage.setItem('adb-manager', JSON.stringify(items));
+
     // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');
   }
@@ -58,7 +60,8 @@ export default function Address(props) {
     const validations = {
       name: regularName,
       address: regularName,
-      cityUF: (value) => value == '',
+      city: (value) => value == '',
+      uf: (value) => value == '',
       zipCode: zipCode
     }
     const required = Object.entries(validations);

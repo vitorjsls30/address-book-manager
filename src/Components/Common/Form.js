@@ -62,14 +62,18 @@ export default function Form(
             <TextField id="address" name="address" label="Address" placeholder="Type your Full Address" fullWidth 
               value={values['address']} onChange={handleChange} error={errors['address']} />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField id="city-uf" name="cityUF" className={ classes.inputs } select label="City and UF" value={values['cityUF']} onChange={handleChange} error={errors['cityUF']}>
+          <Grid item xs={12} sm={4}>
+            <TextField id="city" name="city" label="City" placeholder="City Name..." value={values['city']} 
+              onChange={handleChange} error={errors['city']} />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={handleChange} error={errors['uf']}>
               <MenuItem key="rj" value="rj">RJ</MenuItem>
               <MenuItem key="sp" value="sp">SP</MenuItem>
               <MenuItem key="es" value="es">ES</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={4}>
             <TextField id="zip-code" 
               name="zipCode" 
               label="Zip Code" 

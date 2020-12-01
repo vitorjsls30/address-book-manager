@@ -33,13 +33,11 @@ const useStyles = makeStyles({
 
 export default function AddressItem(props) {
   const classes = useStyles();
-
-  // TODO - use the address prop to populate the Address Information bellow...
   const { selected, handleSelected, address } = props;
 
   // TODO - check the item based on the prop info...
-  const [billing, setBilling] = useState(false);
-  const [shipping, setShipping] = useState(false);
+  const [billing, setBilling] = useState(address['billing']);
+  const [shipping, setShipping] = useState(address['shipping']);
   const [open, setOpen] = useState(false);
 
   const handleCheck = (event, handlerFn) => {
@@ -69,7 +67,7 @@ export default function AddressItem(props) {
             <Delete />
           </IconButton>
           <Typography variant="body1">{ address['address'] }</Typography>
-          <Typography variant="subtitle1" component="p">Indaituba - { address['cityUF'] }</Typography>
+          <Typography variant="subtitle1" component="p">{ address['city'] } - { address['uf'] }</Typography>
         </CardContent>
 
         <CardActions>
