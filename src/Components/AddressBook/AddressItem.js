@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: { 
-    maxWidth: 275
+    width: 275
   },
   header: {
     padding: 12
@@ -35,12 +35,12 @@ export default function AddressItem(props) {
   const classes = useStyles();
   const { selected, handleSelected, address } = props;
 
-  // TODO - check the item based on the prop info...
   const [billing, setBilling] = useState(address['billing']);
   const [shipping, setShipping] = useState(address['shipping']);
   const [open, setOpen] = useState(false);
 
   const handleCheck = (event, handlerFn) => {
+    // TODO - UPDATE THE STORED ITEM TO THE LATER RENDER...
     handlerFn(event.target.checked);
   };
 
