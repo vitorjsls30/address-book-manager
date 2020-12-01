@@ -7,13 +7,15 @@ import AddressItem from './AddressItem';
 
 export default function AddressBook (props) {
   const { titleSetter } = props;
-  // TODO - analyze if this state can be moved to the "AddressItem" component...
+  // TODO - analyze if this "selected" state can be moved to the "AddressItem" component...
   const [selected, setSelected] = useState();
-  const addresses = JSON.parse(localStorage.getItem('adb-manager')) || {};
-  const [items, setItems] = useState(addresses);
-
+  const [items, setItems] = useState(() => {
+    const stored = JSON.parse(localStorage.getItem('adb-manager')) || {};
+    const addresses = !!stored['address'] ? [].concat(...stored['address']) : [];
+    return addresses;
+  });
+  
   useEffect(() => {
-    // TODO - test if we can populate the items array here and just reference it on the Grid section...
     titleSetter('Manage Addresses');
   });
   
@@ -24,8 +26,7 @@ export default function AddressBook (props) {
 
   const displayItems = () => {
     return (
-      items['address'].length > 0 ?
-        items['address'].map((address, idx) => {
+      !!items.length ? items.map((address, idx) => {
           return (<Grid item key={idx}>
             {/* TODO - PASS THE address ITEM AS A PROP REFERENCE INTO THE <AddressItem /> Component...*/}
             <AddressItem addressId={idx} selected={selected} handleSelected={() => handleSelected(idx)} />
