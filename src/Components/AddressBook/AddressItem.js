@@ -33,8 +33,9 @@ const useStyles = makeStyles({
 
 export default function AddressItem(props) {
   const classes = useStyles();
+
   // TODO - use the address prop to populate the Address Information bellow...
-  const { selected, handleSelected, addressId } = props;
+  const { selected, handleSelected, address } = props;
 
   // TODO - check the item based on the prop info...
   const [billing, setBilling] = useState(false);
@@ -53,22 +54,22 @@ export default function AddressItem(props) {
     <FormControl>
       <Card className={classes.root}>
         <CardHeader 
-          title={<Typography variant="h5" component="h2">My first Address</Typography>}
+          title={<Typography variant="h5" component="h2">{ address['name'] }</Typography>}
           action={
-            <FormControlLabel control={<Radio name="address" value="my-address" checked={selected === addressId} onChange={handleSelected} color="primary" />} />
+            <FormControlLabel control={<Radio name="address" value="my-address" checked={ selected === address['id'] } onChange={ handleSelected } color="primary" />} />
           }
           className={classes.header}
         />
 
-        <CardContent className={classes.content}>
-          <IconButton component={Link} to={`Address/${addressId}`}  color="inherit" className={classes.actions}>
+        <CardContent className={ classes.content }>
+          <IconButton component={ Link } to={ `Address/${address['id']}` }  color="inherit" className={ classes.actions }>
             <Edit />
           </IconButton>
-          <IconButton color="inherit" className={classes.actions} onClick={handleDeleteOpen}>
+          <IconButton color="inherit" className={ classes.actions } onClick={ handleDeleteOpen }>
             <Delete />
           </IconButton>
-          <Typography variant="body1">Sorocaba Street, 412, Apartment 01, 13339-390</Typography>
-          <Typography variant="subtitle1" component="p">Indaituba - SP</Typography>
+          <Typography variant="body1">{ address['address'] }</Typography>
+          <Typography variant="subtitle1" component="p">Indaituba - { address['cityUF'] }</Typography>
         </CardContent>
 
         <CardActions>

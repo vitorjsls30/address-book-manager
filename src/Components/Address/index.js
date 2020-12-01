@@ -7,6 +7,7 @@ export default function Address(props) {
   const { titleSetter } = props;
 
   const initialValues = {
+    id: new Date().getTime(),
     name: '',
     address: '',
     zipCode: '',
@@ -49,7 +50,7 @@ export default function Address(props) {
     const addresses = !!items && items.hasOwnProperty('address')? items['address'] : [];
     items = { address: [...addresses, formData] };
     window.localStorage.setItem('adb-manager', JSON.stringify(items));
-    // TODO - INFORM THE USER BEFORE REDIRECT...
+    // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');
   }
 

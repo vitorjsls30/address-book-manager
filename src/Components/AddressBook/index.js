@@ -8,6 +8,7 @@ import AddressItem from './AddressItem';
 export default function AddressBook (props) {
   const { titleSetter } = props;
   // TODO - analyze if this "selected" state can be moved to the "AddressItem" component...
+  
   const [selected, setSelected] = useState();
   const [items, setItems] = useState(() => {
     const stored = JSON.parse(localStorage.getItem('adb-manager')) || {};
@@ -26,10 +27,10 @@ export default function AddressBook (props) {
 
   const displayItems = () => {
     return (
-      !!items.length ? items.map((address, idx) => {
-          return (<Grid item key={idx}>
+      !!items.length ? items.map(address => {
+          return (<Grid item key={address['id']}>
             {/* TODO - PASS THE address ITEM AS A PROP REFERENCE INTO THE <AddressItem /> Component...*/}
-            <AddressItem addressId={idx} selected={selected} handleSelected={() => handleSelected(idx)} />
+            <AddressItem address={address} selected={selected} handleSelected={() => handleSelected(address['id'])} />
           </Grid>)
         })
       : <Typography variant="h5" component="h3">No items to display...</Typography>
