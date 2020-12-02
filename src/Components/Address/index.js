@@ -7,6 +7,10 @@ export default function Address(props) {
   const { titleSetter } = props;
   const { id } = useParams();
 
+  useEffect(() => {
+    titleSetter();
+  });
+
   let initialValues = {
     id: new Date().getTime(),
     name: '',
@@ -17,15 +21,11 @@ export default function Address(props) {
     shipping: false,
     billing: false
   };
-
-  useEffect(() => {
-    titleSetter();
-  });
+  Object.freeze(initialValues);
 
   const getAddress = (id) => {
-    if(!window.localStorage || !id) {
-      return;
-    }
+    if(!window.localStorage || !id) return;
+
     const items = JSON.parse(localStorage.getItem('adb-manager')) || [];
     const address = !!items['address'] ? items['address'].filter(item => item['id'] == id) : [];
     return !!address[0] ? address[0] : {};
@@ -34,9 +34,9 @@ export default function Address(props) {
   const [formData, setFormData] = useState(() => {
     const address = getAddress(id);
     console.log('returned address', address);
-    // TODO - map address fields into the initialValues variable
-    return initialValues;
+    return !!address ? address : initialValues;
   });
+
   const [errors, setErrors] = useState({});
   const history = useHistory();
 
