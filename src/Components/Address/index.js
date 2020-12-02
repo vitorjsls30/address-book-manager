@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
 import { regularName, zipCode } from '../Common/Validation';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 export default function Address(props) {
   const { titleSetter } = props;
+  const { id } = useParams();
 
-  const initialValues = {
+  let initialValues = {
     id: new Date().getTime(),
     name: '',
     address: '',
@@ -16,16 +17,28 @@ export default function Address(props) {
     shipping: false,
     billing: false
   };
-  Object.freeze(initialValues);
 
   useEffect(() => {
     titleSetter();
   });
 
-  const [formData, setFormData] = useState(initialValues);
+  const getAddress = (id) => {
+    if(!window.localStorage || !id) {
+      return;
+    }
+    const items = JSON.parse(localStorage.getItem('adb-manager')) || [];
+    const address = !!items['address'] ? items['address'].filter(item => item['id'] == id) : [];
+    return !!address[0] ? address[0] : {};
+  };
+
+  const [formData, setFormData] = useState(() => {
+    const address = getAddress(id);
+    console.log('returned address', address);
+    // TODO - map address fields into the initialValues variable
+    return initialValues;
+  });
   const [errors, setErrors] = useState({});
   const history = useHistory();
-
 
   const handleChange = (event) => {
     let value = event.target.value;
