@@ -6,6 +6,8 @@ import { useHistory, useParams } from 'react-router-dom';
 export default function Address(props) {
   const { titleSetter } = props;
   const { id } = useParams();
+  const [errors, setErrors] = useState({});
+  const history = useHistory();
 
   useEffect(() => {
     titleSetter();
@@ -26,19 +28,19 @@ export default function Address(props) {
   const getAddress = (id) => {
     if(!window.localStorage || !id) return;
 
-    const items = JSON.parse(localStorage.getItem('adb-manager')) || [];
-    const address = !!items['address'] ? items['address'].filter(item => item['id'] == id) : [];
+    const address = !!addresses ? addresses.filter(item => item['id'] == id) : [];
     return !!address[0] ? address[0] : {};
   };
 
-  const [formData, setFormData] = useState(() => {
-    const address = getAddress(id);
-    console.log('returned address', address);
-    return !!address ? address : initialValues;
+  const [addresses, setAddresses] = useState(() => {
+    const items = JSON.parse(window.localStorage.getItem('adb-manager')) || {};
+    return !!items['addresses'] ? items['addresses'] : [];
   });
 
-  const [errors, setErrors] = useState({});
-  const history = useHistory();
+  const [formData, setFormData] = useState(() => {
+    const address = getAddress(id);
+    return !!address ? address : initialValues;
+  });
 
   const handleChange = (event) => {
     let value = event.target.value;
@@ -59,12 +61,10 @@ export default function Address(props) {
     if(!window.localStorage) {
       return;
     }
+    const filtered = addresses.filter(item => item.id != id) || [];
+    const items = { addresses: [...filtered, formData] };
 
-    let items = JSON.parse(window.localStorage.getItem('adb-manager')) || {};
-    const addresses = !!items && items.hasOwnProperty('address')? items['address'] : [];
-    items = { address: [...addresses, formData] };
     window.localStorage.setItem('adb-manager', JSON.stringify(items));
-
     // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');
   }

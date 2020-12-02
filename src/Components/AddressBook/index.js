@@ -22,7 +22,7 @@ export default function AddressBook (props) {
   const [selected, setSelected] = useState();
   const [items, setItems] = useState(() => {
     const stored = JSON.parse(localStorage.getItem('adb-manager')) || {};
-    const addresses = !!stored['address'] ? [].concat(...stored['address']) : [];
+    const addresses = !!stored['addresses'] ? [].concat(...stored['addresses']) : [];
     return addresses;
   });
   
