@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
-import { regularName, zipCode } from '../Common/Validation';
+import { handleAdddressUpdate, 
+  filterAddress, 
+  setStorageItem, 
+  getStorageItem } from '../Common/DataManager';
+import { validateFormField } from '../Common/Validation';
 import { useHistory, useParams } from 'react-router-dom';
-import { formatMs } from '@material-ui/core';
 
 export default function Address(props) {
   const { titleSetter } = props;
@@ -26,20 +29,15 @@ export default function Address(props) {
   };
   Object.freeze(initialValues);
 
-  const getAddress = (id) => {
-    if(!window.localStorage || !id) return;
-
-    const address = !!addresses ? addresses.filter(item => item['id'] == id) : [];
-    return !!address[0] ? address[0] : {};
-  };
-
   const [addresses, setAddresses] = useState(() => {
-    const items = JSON.parse(window.localStorage.getItem('adb-manager')) || {};
+    const items = getStorageItem('adb-manager');
+
     return !!items['addresses'] ? items['addresses'] : [];
   });
 
   const [formData, setFormData] = useState(() => {
-    const address = getAddress(id);
+    const address = filterAddress(id, addresses);
+
     return !!address ? address : initialValues;
   });
 
@@ -62,41 +60,16 @@ export default function Address(props) {
     if(!window.localStorage) {
       return;
     }
+    const updated = handleAdddressUpdate(formData, addresses, id);
+    const items = { addresses: updated };
 
-    let currIdx = addresses.findIndex((item) => item.id == id);
-    let replace = currIdx == -1 ? 0 : 1;
-    currIdx = currIdx > -1 ? currIdx : addresses.length;
-
-    addresses.splice(currIdx, replace, formData);
-
-    const items = { addresses };
-    window.localStorage.setItem('adb-manager', JSON.stringify(items));
+    setStorageItem('adb-manager', items);
     // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');
   }
 
   const isValid = () => {
-    const validations = {
-      name: regularName,
-      address: regularName,
-      city: (value) => value == '',
-      uf: (value) => value == '',
-      zipCode: zipCode
-    }
-    const required = Object.entries(validations);
-    let validateErrs = {};
-
-    required.forEach(item => {
-      const [field, validation] = item;
-      if(validation(formData[field])) {
-        validateErrs = { ...validateErrs, [field]: true};
-      }
-    });
-
-    if(!formData['shipping'] && !formData['billing']) {
-      validateErrs = { ...validateErrs, shipping: true, billing: true };
-    }
-
+    const validateErrs = validateFormField(formData);
     setErrors(prevState => {
       return {...prevState, ...validateErrs}
     });
