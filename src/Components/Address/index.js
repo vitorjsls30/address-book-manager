@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
 import { regularName, zipCode } from '../Common/Validation';
 import { useHistory, useParams } from 'react-router-dom';
+import { formatMs } from '@material-ui/core';
 
 export default function Address(props) {
   const { titleSetter } = props;
@@ -61,9 +62,14 @@ export default function Address(props) {
     if(!window.localStorage) {
       return;
     }
-    const filtered = addresses.filter(item => item.id != id) || [];
-    const items = { addresses: [...filtered, formData] };
 
+    let currIdx = addresses.findIndex((item) => item.id == id);
+    let replace = currIdx == -1 ? 0 : 1;
+    currIdx = currIdx > -1 ? currIdx : addresses.length;
+
+    addresses.splice(currIdx, replace, formData);
+
+    const items = { addresses };
     window.localStorage.setItem('adb-manager', JSON.stringify(items));
     // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');
