@@ -60,10 +60,10 @@ export default function Address(props) {
     if(!window.localStorage) {
       return;
     }
-    const updated = handleAdddressUpdate(formData, addresses, id);
-    const items = { addresses: updated };
 
-    setStorageItem('adb-manager', items);
+    const updated = handleAdddressUpdate(formData, addresses, id);
+    setStorageItem('adb-manager', { addresses: updated });
+
     // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');
   }

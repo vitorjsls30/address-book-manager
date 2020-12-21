@@ -7,14 +7,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 
 export default function DeleteModal(props) {
-  const { open, handleOpen } = props;
+  const { open, handleOpen, handleDelete } = props;
   
   const onConfirm = () => {
-    // TODO - For now, we'll only close the modal...
+    handleDelete();
     handleOpen(false);
   };
+
   const onCancel = () => {
-    // TODO - For now, we'll only close the modal...
     handleOpen(false);
   };
 

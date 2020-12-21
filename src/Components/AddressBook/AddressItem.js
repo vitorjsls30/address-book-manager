@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 
 export default function AddressItem(props) {
   const classes = useStyles();
-  const { selected, handleSelected, address } = props;
+  const { selected, handleSelected, handleDelete, address } = props;
 
   const [billing, setBilling] = useState(address['billing']);
   const [shipping, setShipping] = useState(address['shipping']);
@@ -83,7 +83,7 @@ export default function AddressItem(props) {
             </FormGroup>
         </CardActions>
       </Card>
-      <DeleteModal open={open} handleOpen={setOpen}/>
+      <DeleteModal open={open} handleOpen={setOpen} handleDelete={ handleDelete } id={address['id']} />
     </FormControl>
   );
 }

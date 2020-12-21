@@ -4,6 +4,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddressItem from './AddressItem';
+import { deleteAddress, setStorageItem } from '../Common/DataManager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,12 +37,22 @@ export default function AddressBook (props) {
     setSelected(value);
   }
 
+  const handleDelete = (id) => {
+    const items = deleteAddress(id);
+    setItems(items);
+    setStorageItem('adb-manager', { addresses: items });
+  }
+
   const displayItems = () => {
     return (
       !!items.length ? items.map(address => {
           return (
             <Grid item key={address['id']}>
-              <AddressItem address={address} selected={selected} handleSelected={() => handleSelected(address['id'])} />
+              <AddressItem address={address} 
+                selected={selected} 
+                handleSelected={() => handleSelected(address['id'])} 
+                handleDelete={() => handleDelete(address['id'])}
+              />
             </Grid>
           );
         })
