@@ -15,7 +15,7 @@ import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import DeleteModal from '../DeleteModal';
 import { Link } from 'react-router-dom';
-import { setAddressOption } from '../Common/DataManager';
+import { setAddressOption } from '../../Data/DataManager';
 
 const useStyles = makeStyles({
   root: { 

@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
-import { handleAdddressUpdate, 
-  filterAddress, 
-  setStorageItem, 
-  getStorageItem } from '../Common/DataManager';
+import { handleAddressUpdate, filterAddress } from '../../Data/DataManager';
 import { validateFormField } from '../Common/Validation';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -29,15 +26,8 @@ export default function Address(props) {
   };
   Object.freeze(initialValues);
 
-  // TODO - EXTRACT THE ADDRESSES DATA HANDLE INTO THE DataManager File...
-  const [addresses, setAddresses] = useState(() => {
-    const items = getStorageItem('adb-manager');
-
-    return !!items['addresses'] ? items['addresses'] : [];
-  });
-
   const [formData, setFormData] = useState(() => {
-    const address = filterAddress(id, addresses);
+    const address = filterAddress(id);
 
     return !!address ? address : initialValues;
   });
@@ -62,11 +52,8 @@ export default function Address(props) {
       return;
     }
 
-    const updated = handleAdddressUpdate(formData, addresses, id);
-    const items = getStorageItem('adb-manager');
-    setStorageItem('adb-manager', { ...items, addresses: updated });
+    handleAddressUpdate(formData, id);
 
-    // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');
   }
 

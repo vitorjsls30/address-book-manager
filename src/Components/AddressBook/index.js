@@ -5,9 +5,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddressItem from './AddressItem';
 import { deleteAddress, 
-  setStorageItem, 
   setDefaultAddress,
-  getStorageItem } from '../Common/DataManager';
+  getStorageItem,
+  extractAddresses } from '../../Data/DataManager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,8 +29,7 @@ export default function AddressBook (props) {
   });
 
   const [items, setItems] = useState(() => {
-    const stored = JSON.parse(localStorage.getItem('adb-manager')) || {};
-    const addresses = !!stored['addresses'] ? [].concat(...stored['addresses']) : [];
+    const addresses = extractAddresses();
     return addresses;
   });
   
@@ -46,7 +45,6 @@ export default function AddressBook (props) {
   const handleDelete = (id) => {
     const items = deleteAddress(id);
     setItems(items);
-    setStorageItem('adb-manager', { addresses: items });
   }
 
   const displayItems = () => {
