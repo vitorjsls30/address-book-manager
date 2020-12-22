@@ -40,12 +40,10 @@ export const setAddressOption = (id, prop, value) => {
 
   const address = addresses.filter(item => item.id == id);
   address[0][prop] = value;
-  const remaining = addresses.filter(item => item.id != id);
 
-  const data = [...remaining, ...address];
+  const handled = handleAdddressUpdate(...address, addresses, id);
   const items = getStorageItem('adb-manager');
-
-  setStorageItem('adb-manager', { ...items, addresses: data });
+  setStorageItem('adb-manager', { ...items, addresses: handled });
 };
 
 export const setStorageItem = (key, item) => {
