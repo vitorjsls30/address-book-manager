@@ -68,7 +68,7 @@ export const App = () => {
             <Typography variant="h6" className={classes.title}>
               {appBarTitle}
             </Typography>
-            <IconButton color="inherit" onClick={(e) => handleClick(e, setUserAnchorEl)}>
+            <IconButton disabled={ true } color="inherit" onClick={(e) => handleClick(e, setUserAnchorEl)}>
               <AccountCircleIcon />
             </IconButton>
             <Menu
