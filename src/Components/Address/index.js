@@ -29,6 +29,7 @@ export default function Address(props) {
   };
   Object.freeze(initialValues);
 
+  // TODO - EXTRACT THE ADDRESSES DATA HANDLE INTO THE DataManager File...
   const [addresses, setAddresses] = useState(() => {
     const items = getStorageItem('adb-manager');
 
@@ -62,7 +63,8 @@ export default function Address(props) {
     }
 
     const updated = handleAdddressUpdate(formData, addresses, id);
-    setStorageItem('adb-manager', { addresses: updated });
+    const items = getStorageItem('adb-manager');
+    setStorageItem('adb-manager', { ...items, addresses: updated });
 
     // TODO - INFORM THE USER WITH A MODAL BEFORE REDIRECT...
     history.replace('/');

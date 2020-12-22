@@ -15,6 +15,7 @@ import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import DeleteModal from '../DeleteModal';
 import { Link } from 'react-router-dom';
+import { setAddressOption } from '../Common/DataManager';
 
 const useStyles = makeStyles({
   root: { 
@@ -39,8 +40,8 @@ export default function AddressItem(props) {
   const [shipping, setShipping] = useState(address['shipping']);
   const [open, setOpen] = useState(false);
 
-  const handleCheck = (event, handlerFn) => {
-    // TODO - UPDATE THE STORED ITEM TO THE LATER RENDER...
+  const handleCheck = (event, handlerFn, name) => {
+    setAddressOption(address['id'], name, event.target.checked);
     handlerFn(event.target.checked);
   };
 
@@ -73,11 +74,11 @@ export default function AddressItem(props) {
         <CardActions>
             <FormGroup row={true} >
               <FormControlLabel 
-                control={<Checkbox checked={shipping} name="shipping" onChange={(e) => handleCheck(e, setShipping)} />}
+                control={<Checkbox checked={shipping} name="shipping" onChange={(e) => handleCheck(e, setShipping, 'shipping')} />}
                 label="Shipping"
               />
               <FormControlLabel 
-                control={<Checkbox checked={billing} name="billing" onChange={(e) => handleCheck(e, setBilling)} />}
+                control={<Checkbox checked={billing} name="billing" onChange={(e) => handleCheck(e, setBilling, 'billing')} />}
                 label="Billing"
               />
             </FormGroup>
