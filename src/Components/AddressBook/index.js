@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddressItem from './AddressItem';
-import { deleteAddress, setStorageItem } from '../Common/DataManager';
+import { deleteAddress, setStorageItem, setDefaultAddress } from '../Common/DataManager';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,8 +32,7 @@ export default function AddressBook (props) {
   });
   
   const handleSelected = (value) => {
-    // TODO - IMPLEMENT THE LOGIC TO INDICATE THAT THIS IS THE DESIRED ADDRESS TO USE
-    // AND SAVE IT FOR THE LATER RENDER
+    setDefaultAddress(value);
     setSelected(value);
   }
 

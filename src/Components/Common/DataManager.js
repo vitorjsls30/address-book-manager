@@ -23,6 +23,13 @@ export const deleteAddress = (id) => {
   return filtered;
 };
 
+export const setDefaultAddress = (value) => {
+  const itens = getStorageItem('adb-manager');
+  const addresses = itens['addresses'] || [];
+  const data = { default: value, addresses };
+  setStorageItem('adb-manager', data);
+};
+
 export const setStorageItem = (key, item) => {
   window.localStorage.setItem(key, JSON.stringify(item));
 };
