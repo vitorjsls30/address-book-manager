@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddressBook (props) {
-  const { titleSetter } = props;
+  const { titleSetter, search } = props;
   const classes = useStyles();
 
   const [selected, setSelected] = useState(() => {
@@ -36,6 +36,12 @@ export default function AddressBook (props) {
   useEffect(() => {
     titleSetter('Manage Addresses');
   });
+
+  useEffect(() => {
+    const addresses = extractAddresses();
+    const filtered = addresses.filter(item => item['name'].toLowerCase().includes(search.toLowerCase()));
+    setItems(filtered);
+  }, [search]);
   
   const handleSelected = (value) => {
     setDefaultAddress(value);

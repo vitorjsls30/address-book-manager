@@ -75,6 +75,7 @@ export const App = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [userAnchorEl, setUserAnchorEl] = useState(null);
   const [appBarTitle, setAppBarTitle] = useState('');
+  const [search, setSearch] = useState('');
 
   const handleClick = (event, handlerFn) => {
     handlerFn(event.currentTarget);
@@ -82,6 +83,10 @@ export const App = () => {
 
   const handleClose = (handlerFn) => {
     handlerFn(null);
+  }
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
   }
 
   const classes = useStyles();
@@ -122,7 +127,10 @@ export const App = () => {
                 name="search-bar" 
                 id="search-bar" 
                 placeholder="Search an Address..." 
-                variant="outlined" />
+                fullWidth={true}
+                variant="outlined" 
+                onChange={handleSearch}
+                />
             </div>
             <div className={classes.grow}></div>
             <IconButton disabled={ true } color="inherit" onClick={(e) => handleClick(e, setUserAnchorEl)}>
@@ -143,7 +151,7 @@ export const App = () => {
         <div className={classes.appBarSpacer}></div>
         <Switch>
           <Route key="1" exact path="/">
-            <AddressBook titleSetter={setAppBarTitle} />
+            <AddressBook titleSetter={setAppBarTitle} search={search}/>
           </Route>
           <Route key="3" path="/Address/:id">
             <Address titleSetter={() => setAppBarTitle('Update Address')} />
