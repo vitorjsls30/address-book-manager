@@ -17,3 +17,29 @@ export const zipCode = (address) => {
   }
   return true;
 }
+
+export const validateFormField = (formData) => {
+  let validateErrs = {};
+
+  const validations = {
+    name: regularName,
+    address: regularName,
+    city: (value) => value == '',
+    uf: (value) => value == '',
+    zipCode: zipCode
+  };
+
+  const required = Object.entries(validations);
+  required.forEach(item => {
+    const [field, validation] = item;
+    if(validation(formData[field])) {
+      validateErrs = { ...validateErrs, [field]: true};
+    }
+  });
+
+  if(!formData['shipping'] && !formData['billing']) {
+    validateErrs = { ...validateErrs, shipping: true, billing: true };
+  }
+
+  return validateErrs;
+}

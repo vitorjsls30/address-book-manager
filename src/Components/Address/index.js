@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
-import { regularName, zipCode } from '../Common/Validation';
+import { handleAddressUpdate, filterAddress } from '../../Data/DataManager';
+import { validateFormField } from '../Common/Validation';
+import { useHistory, useParams } from 'react-router-dom';
 
 export default function Address(props) {
   const { titleSetter } = props;
-
-  const initialValues = {
-    name: '',
-    address: '',
-    zipCode: '',
-    cityUF: '',
-    shipping: false,
-    billing: false
-  };
-  Object.freeze(initialValues);
+  const { id } = useParams();
+  const [errors, setErrors] = useState({});
+  const history = useHistory();
 
   useEffect(() => {
     titleSetter();
   });
 
-  const [formData, setFormData] = useState(initialValues);
+  let initialValues = {
+    id: new Date().getTime(),
+    name: '',
+    address: '',
+    zipCode: '',
+    city: '',
+    uf: '',
+    shipping: false,
+    billing: false
+  };
+  Object.freeze(initialValues);
 
-  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState(() => {
+    const address = filterAddress(id);
+
+    return !!address ? address : initialValues;
+  });
 
   const handleChange = (event) => {
-    const value = !!event.target.checked ? event.target.checked : event.target.value;
+    let value = event.target.value;
+    
+    if(event.target.type == 'checkbox') {
+      value = event.target.checked;
+    }
+
     setFormData({ ...formData, [event.target.name]: value });
     setErrors({ ...errors, [event.target.name]: false });
   }
@@ -34,30 +48,17 @@ export default function Address(props) {
   }
 
   const saveData = () => {
-    console.log('Yo! your form is valid!! Go go go!');
+    if(!window.localStorage) {
+      return;
+    }
+
+    handleAddressUpdate(formData, id);
+
+    history.replace('/');
   }
 
   const isValid = () => {
-    const validations = {
-      name: regularName,
-      address: regularName,
-      cityUF: (value) => value == '',
-      zipCode: zipCode
-    }
-    const required = Object.entries(validations);
-    let validateErrs = {};
-
-    required.forEach(item => {
-      const [field, validation] = item;
-      if(validation(formData[field])) {
-        validateErrs = { ...validateErrs, [field]: true};
-      }
-    });
-
-    if(!formData['shipping'] && !formData['billing']) {
-      validateErrs = { ...validateErrs, 'shipping': true, 'billing': true };
-    }
-
+    const validateErrs = validateFormField(formData);
     setErrors(prevState => {
       return {...prevState, ...validateErrs}
     });
