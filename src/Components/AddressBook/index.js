@@ -9,6 +9,8 @@ import { deleteAddress,
   getStorageItem,
   extractAddresses } from '../../Data/DataManager';
 
+  import { useStore } from 'react-redux';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1
@@ -20,6 +22,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddressBook (props) {
+  const store = useStore();
+
   const { titleSetter, search } = props;
   const classes = useStyles();
 
@@ -36,6 +40,11 @@ export default function AddressBook (props) {
   useEffect(() => {
     titleSetter('Manage Addresses');
   });
+  
+  useEffect(() => {
+    // Displaying the initial mocked state from the store...
+    console.log('INITIAL MOCK STORE', store.getState());
+  }, [store.getState()]);
 
   useEffect(() => {
     const addresses = extractAddresses();
