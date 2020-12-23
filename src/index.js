@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ReactDom from 'react-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
 
 import { 
   BrowserRouter as Router,
@@ -22,12 +24,52 @@ import Address from './Components/Address';
 
 const useStyles = makeStyles((theme) => ({
   root: { flexGrow: 1 },
+  grow: { flexGrow: 1 },
   appBarSpacer: { minHeight: 20 },
   menuIcon: { marginRight: theme.spacing(2) },
   menuItem: { textDecoration: 'none' },
-  title: { flexGrow: 1 }
+  title: { 
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'block'
+    }
+   },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25)
+    },
+    width: '100%',
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.spacing(3),
+      width: '50%'
+    },
+    [theme.breakpoints.up('lg')]: {
+      marginLeft: theme.spacing(3),
+      width: '30%'
+    },
+  },
+  searchIcon: {
+    display: 'flex',
+    position: 'absolute',
+    height: '100%',
+    padding: theme.spacing(0, 2),
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    width: '100%'
+  }
 }));
-
 
 export const App = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -68,6 +110,21 @@ export const App = () => {
             <Typography variant="h6" className={classes.title}>
               {appBarTitle}
             </Typography>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase 
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput
+                }}
+                name="search-bar" 
+                id="search-bar" 
+                placeholder="Search an Address..." 
+                variant="outlined" />
+            </div>
+            <div className={classes.grow}></div>
             <IconButton disabled={ true } color="inherit" onClick={(e) => handleClick(e, setUserAnchorEl)}>
               <AccountCircleIcon />
             </IconButton>
