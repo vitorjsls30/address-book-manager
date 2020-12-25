@@ -33,18 +33,13 @@ export default function AddressBook (props) {
   });
 
   const [items, setItems] = useState(() => {
-    const addresses = extractAddresses();
+    const addresses = store.getState();
     return addresses;
   });
   
   useEffect(() => {
     titleSetter('Manage Addresses');
   });
-  
-  useEffect(() => {
-    // Displaying the initial mocked state from the store...
-    console.log('INITIAL MOCK STORE', store.getState());
-  }, [store.getState()]);
 
   useEffect(() => {
     const addresses = extractAddresses();

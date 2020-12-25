@@ -1,11 +1,9 @@
 import { combineReducers } from 'redux';
+import { extractAddresses } from '../../DataManager';
 
-const mock = {
-  addresses: [],
-  default: null
-};
+const initialState = extractAddresses();
 
-const addresses = (state = mock, action) => {
+const addresses = (state = initialState, action) => {
   // here goes the desired actio filters to return the data...
   // if (action.type == ACTION)...
   // returning the mock data for now...
