@@ -7,9 +7,9 @@ import AddressItem from './AddressItem';
 import { deleteAddress, 
   setDefaultAddress,
   getStorageItem,
-  extractAddresses } from '../../Data/DataManager';
+} from '../../Data/DataManager';
 
-  import { useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddressBook (props) {
-  const store = useStore();
+  const sectionTitle = 'Manage Addresses';
 
   const { titleSetter, search } = props;
   const classes = useStyles();
@@ -32,17 +32,14 @@ export default function AddressBook (props) {
     return items['default'];
   });
 
-  const [items, setItems] = useState(() => {
-    const addresses = store.getState();
-    return addresses;
-  });
+  const addresses = useSelector(state => state.addresses);
+  const [items, setItems] = useState(addresses);
   
   useEffect(() => {
-    titleSetter('Manage Addresses');
-  });
+    titleSetter(sectionTitle);
+  }, [sectionTitle]);
 
   useEffect(() => {
-    const addresses = extractAddresses();
     const filtered = addresses.filter(item => item['name'].toLowerCase().includes(search.toLowerCase()));
     setItems(filtered);
   }, [search]);
