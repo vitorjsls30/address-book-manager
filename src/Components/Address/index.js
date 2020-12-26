@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
-import { handleAddressUpdate, filterAddress } from '../../Data/DataManager';
 import { validateFormField } from '../Common/Validation';
 import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function Address(props) {
   const { titleSetter } = props;
   const { id } = useParams();
   const [errors, setErrors] = useState({});
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     titleSetter();
@@ -26,9 +27,8 @@ export default function Address(props) {
   };
   Object.freeze(initialValues);
 
+  const address = useSelector(state => state['addresses']['items'].filter(item => item.id == id)[0]);
   const [formData, setFormData] = useState(() => {
-    const address = filterAddress(id);
-
     return !!address ? address : initialValues;
   });
 
@@ -52,8 +52,7 @@ export default function Address(props) {
       return;
     }
 
-    handleAddressUpdate(formData, id);
-
+    dispatch({ type: 'ADD_ADDRESS', payload: { current: formData, id } });
     history.replace('/');
   }
 

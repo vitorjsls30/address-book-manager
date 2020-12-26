@@ -15,7 +15,7 @@ import Delete from '@material-ui/icons/Delete';
 import Edit from '@material-ui/icons/Edit';
 import DeleteModal from '../DeleteModal';
 import { Link } from 'react-router-dom';
-import { setAddressOption } from '../../Data/DataManager';
+import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles({
   root: { 
@@ -39,9 +39,13 @@ export default function AddressItem(props) {
   const [billing, setBilling] = useState(address['billing']);
   const [shipping, setShipping] = useState(address['shipping']);
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const handleCheck = (event, handlerFn, name) => {
-    setAddressOption(address['id'], name, event.target.checked);
+    dispatch({ 
+      type: 'SET_OPTION', 
+      payload: { id: address['id'], prop: name, value: event.target.checked } 
+    });
     handlerFn(event.target.checked);
   };
 

@@ -19,6 +19,9 @@ import {
   Route
 } from 'react-router-dom';
 
+import { Provider } from 'react-redux';
+import { store } from './Data/store';
+
 import AddressBook from './Components/AddressBook';
 import Address from './Components/Address';
 
@@ -166,4 +169,8 @@ export const App = () => {
 };
 
 const root = document.getElementById('root');
-root ? ReactDom.render(<App />, root) : false;
+root ? ReactDom.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+  , root) : false;

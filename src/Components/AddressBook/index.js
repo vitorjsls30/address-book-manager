@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddressItem from './AddressItem';
-import { deleteAddress, 
-  setDefaultAddress,
-  getStorageItem,
-  extractAddresses } from '../../Data/DataManager';
+import { setStorageItem } from '../../Data/DataManager';
+
+import { useStore, useSelector, useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,37 +19,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddressBook (props) {
+  const sectionTitle = 'Manage Addresses';
+  const store = useStore();
+  const dispatch = useDispatch();
+
   const { titleSetter, search } = props;
   const classes = useStyles();
 
-  const [selected, setSelected] = useState(() => {
-    const items = getStorageItem('adb-manager');
-    return items['default'];
-  });
+  const defaultItem = useSelector(state => state['addresses']['default']);
+  const [selected, setSelected] = useState(defaultItem);
 
-  const [items, setItems] = useState(() => {
-    const addresses = extractAddresses();
-    return addresses;
-  });
+  const addresses = useSelector(state => state['addresses']['items']);
+  const [items, setItems] = useState(addresses);
   
   useEffect(() => {
-    titleSetter('Manage Addresses');
-  });
+    titleSetter(sectionTitle);
+  }, [sectionTitle]);
 
   useEffect(() => {
-    const addresses = extractAddresses();
     const filtered = addresses.filter(item => item['name'].toLowerCase().includes(search.toLowerCase()));
     setItems(filtered);
   }, [search]);
   
-  const handleSelected = (value) => {
-    setDefaultAddress(value);
+  const handleSelected = useCallback((value) => {
     setSelected(value);
-  }
+    dispatch({ type: 'SET_DEFAULT', payload: value });
+
+    setStorageItem('adb-manager', store.getState()['addresses']);
+  }, [dispatch]);
 
   const handleDelete = (id) => {
-    const items = deleteAddress(id);
-    setItems(items);
+    dispatch({ type: 'DELETE_ADDRESS', payload: id });
+    setItems(store.getState()['addresses']['items']);
+
+    setStorageItem('adb-manager', store.getState()['addresses']);
   }
 
   const displayItems = () => {

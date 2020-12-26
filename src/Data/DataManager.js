@@ -1,17 +1,17 @@
 const updateState = (addresses) => {
-  const items = getStorageItem('adb-manager');
-  setStorageItem('adb-manager', { ...items, addresses });
+  const data = getStorageItem('adb-manager');
+  setStorageItem('adb-manager', { ...data, items: addresses });
 }
 
 export const extractAddresses = () => {
   if (!window.localStorage) return [];
 
-  const items = getStorageItem('adb-manager');
-  return items['addresses'] || [];
+  const data = getStorageItem('adb-manager') || {};
+  return { items: data['items'] || [], default: data['default'] };
 }
 
 export const handleAddressUpdate = (current, id) => {
-  const addresses = extractAddresses();
+  const addresses = extractAddresses()['items'];
   let currIdx = addresses.findIndex((item) => item.id == id);
   let replace = currIdx == -1 ? 0 : 1;
 
@@ -19,40 +19,17 @@ export const handleAddressUpdate = (current, id) => {
 
   addresses.splice(currIdx, replace, current);
   updateState(addresses);
-};
-
-export const filterAddress = (id) => {
-  if(!id) return;
-
-  const addresses = extractAddresses();
-  const address = addresses.filter(item => item['id'] == id);
-
-  return !!address[0] ? address[0] : {};
-};
-
-export const deleteAddress = (id) => {
-  const addresses = extractAddresses();
-  if(!addresses.length) return;
-
-  const filtered = addresses.filter(item => item.id != id);
-  updateState(filtered);
-  return filtered;
-};
-
-export const setDefaultAddress = (value) => {
-  const addresses = extractAddresses();
-  const data = { default: value, addresses };
-  setStorageItem('adb-manager', data);
+  return addresses;
 };
 
 export const setAddressOption = (id, prop, value) => {
-  const addresses = extractAddresses();
+  const addresses = extractAddresses()['items'];
   if(!addresses.length) return;
 
   const address = addresses.filter(item => item.id == id);
   address[0][prop] = value;
 
-  handleAddressUpdate(...address, id);
+  return handleAddressUpdate(...address, id);
 };
 
 export const setStorageItem = (key, item) => {
