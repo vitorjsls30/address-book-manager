@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Form from '../Common/Form';
-import { handleAddressUpdate, filterAddress } from '../../Data/DataManager';
+import { filterAddress } from '../../Data/DataManager';
 import { validateFormField } from '../Common/Validation';
 import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 export default function Address(props) {
   const { titleSetter } = props;
   const { id } = useParams();
   const [errors, setErrors] = useState({});
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     titleSetter();
@@ -52,7 +54,7 @@ export default function Address(props) {
       return;
     }
 
-    handleAddressUpdate(formData, id);
+    dispatch({ type: 'ADD_ADDRESS', payload: { current: formData, id } });
 
     history.replace('/');
   }

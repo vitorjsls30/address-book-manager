@@ -1,6 +1,6 @@
 const updateState = (addresses) => {
-  const items = getStorageItem('adb-manager');
-  setStorageItem('adb-manager', { ...items, addresses });
+  const data = getStorageItem('adb-manager');
+  setStorageItem('adb-manager', { ...data, items: addresses });
 }
 
 export const extractAddresses = () => {
@@ -19,6 +19,7 @@ export const handleAddressUpdate = (current, id) => {
 
   addresses.splice(currIdx, replace, current);
   updateState(addresses);
+  return addresses;
 };
 
 export const filterAddress = (id) => {
