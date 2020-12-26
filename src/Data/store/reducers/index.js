@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 import { 
   extractAddresses, 
-  handleAddressUpdate } from '../../DataManager';
+  handleAddressUpdate,
+  setAddressOption, 
+} from '../../DataManager';
 
 const stored = extractAddresses();
 
@@ -11,17 +13,21 @@ const initialState = {
 };
 
 const addresses = (state = initialState, action) => {
+  const { payload } = action;
+  let updated = [];
+
   switch(action.type) {
     case 'SET_DEFAULT':
-      return { ...state, default: action.payload };
+      return { ...state, default: payload };
     case 'DELETE_ADDRESS':
-      return { ...state, items: state['items'].filter(item => item.id != action.payload) };
+      return { ...state, items: state['items'].filter(item => item.id != payload) };
     case 'ADD_ADDRESS':
-      const { current, id } = action.payload;
-      const updated = handleAddressUpdate(current, id);
+      updated = handleAddressUpdate(payload['current'], payload['id']);
+      return { ...state, items: updated };
+    case 'SET_OPTION':
+      updated = setAddressOption(payload['id'], payload['prop'], payload['value']);
       return { ...state, items: updated };
   }
-  console.log('returning state is', state);
   return state;
 };
 

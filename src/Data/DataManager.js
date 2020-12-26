@@ -22,15 +22,6 @@ export const handleAddressUpdate = (current, id) => {
   return addresses;
 };
 
-export const filterAddress = (id) => {
-  if(!id) return;
-
-  const addresses = extractAddresses()['items'];
-  const address = addresses.filter(item => item['id'] == id);
-
-  return !!address[0] ? address[0] : {};
-};
-
 export const setAddressOption = (id, prop, value) => {
   const addresses = extractAddresses()['items'];
   if(!addresses.length) return;
@@ -38,7 +29,7 @@ export const setAddressOption = (id, prop, value) => {
   const address = addresses.filter(item => item.id == id);
   address[0][prop] = value;
 
-  handleAddressUpdate(...address, id);
+  return handleAddressUpdate(...address, id);
 };
 
 export const setStorageItem = (key, item) => {
