@@ -6,8 +6,8 @@ const updateState = (addresses) => {
 export const extractAddresses = () => {
   if (!window.localStorage) return [];
 
-  const items = getStorageItem('adb-manager');
-  return items['addresses'] || [];
+  const data = getStorageItem('adb-manager');
+  return data['items'] || [];
 }
 
 export const handleAddressUpdate = (current, id) => {

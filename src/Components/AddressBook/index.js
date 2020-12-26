@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddressItem from './AddressItem';
 import { deleteAddress, 
-  setDefaultAddress,
-  getStorageItem,
+  setStorageItem
 } from '../../Data/DataManager';
 
-import { useSelector } from 'react-redux';
+import { useStore, useSelector, useDispatch } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,16 +22,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function AddressBook (props) {
   const sectionTitle = 'Manage Addresses';
+  const store = useStore();
+  const dispatch = useDispatch();
 
   const { titleSetter, search } = props;
   const classes = useStyles();
 
-  const [selected, setSelected] = useState(() => {
-    const items = getStorageItem('adb-manager');
-    return items['default'];
-  });
+  const defaultItem = useSelector(state => state['addresses']['default']);
+  const [selected, setSelected] = useState(defaultItem);
 
-  const addresses = useSelector(state => state.addresses);
+  const addresses = useSelector(state => state['addresses']['items']);
   const [items, setItems] = useState(addresses);
   
   useEffect(() => {
@@ -44,10 +43,13 @@ export default function AddressBook (props) {
     setItems(filtered);
   }, [search]);
   
-  const handleSelected = (value) => {
-    setDefaultAddress(value);
+  const handleSelected = useCallback((value) => {
     setSelected(value);
-  }
+    dispatch({ type: 'SET_DEFAULT', payload: value });
+
+    const updated = store.getState()['addresses'];
+    setStorageItem('adb-manager', updated);
+  }, [dispatch]);
 
   const handleDelete = (id) => {
     const items = deleteAddress(id);
