@@ -39,12 +39,6 @@ export const deleteAddress = (id) => {
   return filtered;
 };
 
-export const setDefaultAddress = (value) => {
-  const addresses = extractAddresses();
-  const data = { default: value, addresses };
-  setStorageItem('adb-manager', data);
-};
-
 export const setAddressOption = (id, prop, value) => {
   const addresses = extractAddresses();
   if(!addresses.length) return;

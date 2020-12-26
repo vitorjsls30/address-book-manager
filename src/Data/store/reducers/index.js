@@ -9,7 +9,6 @@ const initialState = {
 const addresses = (state = initialState, action) => {
   switch(action.type) {
     case 'SET_DEFAULT':
-      console.log('SET_DEFAULT', { ...state, default: action.payload });
       return { ...state, default: action.payload };
   }
   console.log('returning state is', state);
