@@ -6,12 +6,12 @@ const updateState = (addresses) => {
 export const extractAddresses = () => {
   if (!window.localStorage) return [];
 
-  const data = getStorageItem('adb-manager');
-  return data['items'] || [];
+  const data = getStorageItem('adb-manager') || {};
+  return { items: data['items'] || [], default: data['default'] };
 }
 
 export const handleAddressUpdate = (current, id) => {
-  const addresses = extractAddresses();
+  const addresses = extractAddresses()['items'];
   let currIdx = addresses.findIndex((item) => item.id == id);
   let replace = currIdx == -1 ? 0 : 1;
 
@@ -24,23 +24,14 @@ export const handleAddressUpdate = (current, id) => {
 export const filterAddress = (id) => {
   if(!id) return;
 
-  const addresses = extractAddresses();
+  const addresses = extractAddresses()['items'];
   const address = addresses.filter(item => item['id'] == id);
 
   return !!address[0] ? address[0] : {};
 };
 
-export const deleteAddress = (id) => {
-  const addresses = extractAddresses();
-  if(!addresses.length) return;
-
-  const filtered = addresses.filter(item => item.id != id);
-  updateState(filtered);
-  return filtered;
-};
-
 export const setAddressOption = (id, prop, value) => {
-  const addresses = extractAddresses();
+  const addresses = extractAddresses()['items'];
   if(!addresses.length) return;
 
   const address = addresses.filter(item => item.id == id);

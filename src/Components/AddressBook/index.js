@@ -4,9 +4,7 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import AddressItem from './AddressItem';
-import { deleteAddress, 
-  setStorageItem
-} from '../../Data/DataManager';
+import { setStorageItem } from '../../Data/DataManager';
 
 import { useStore, useSelector, useDispatch } from 'react-redux';
 
@@ -47,13 +45,14 @@ export default function AddressBook (props) {
     setSelected(value);
     dispatch({ type: 'SET_DEFAULT', payload: value });
 
-    const updated = store.getState()['addresses'];
-    setStorageItem('adb-manager', updated);
+    setStorageItem('adb-manager', store.getState()['addresses']);
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    const items = deleteAddress(id);
-    setItems(items);
+    dispatch({ type: 'DELETE_ADDRESS', payload: id });
+    setItems(store.getState()['addresses']['items']);
+
+    setStorageItem('adb-manager', store.getState()['addresses']);
   }
 
   const displayItems = () => {
