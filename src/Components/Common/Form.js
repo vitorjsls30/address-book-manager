@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -10,6 +10,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import MaskedInput from 'react-text-mask';
+import request from '../../services/api';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -53,6 +54,30 @@ export default function Form(
 
     const [disabled, setDisabled] = useState(true);
 
+    const parseAPIUF = () => {
+      request.get('estados')
+      .then(data => {
+        let parsedUF = data['data'].reduce((acc, curr) => acc.concat(curr['sigla']), []);
+        parsedUF = parsedUF.sort((a, b) => a > b ? 1 : -1);
+        setUF(parsedUF);
+      })
+      .catch(err => {
+        console.log(`There was an error performing the request: ${err}`);
+        setUF(defaultUF);
+      });
+    };
+
+    const defaultUF = ['rj', 'sp', 'es', 'mg'];
+    const [UF, setUF] = useState([]);
+
+    useEffect(() => {
+      parseAPIUF();
+    }, []);
+
+    const parseUFMenuItems = () => {
+      return UF.map(item => <MenuItem key={item} value={item}>{item.toUpperCase()}</MenuItem>)
+    };
+
     const fieldHandler = (event) => {
       setDisabled(false);
       handleChange(event);
@@ -76,9 +101,7 @@ export default function Form(
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={fieldHandler} error={errors['uf']}>
-                <MenuItem key="rj" value="rj">RJ</MenuItem>
-                <MenuItem key="sp" value="sp">SP</MenuItem>
-                <MenuItem key="es" value="es">ES</MenuItem>
+                { parseUFMenuItems() }
               </TextField>
             </Grid>
             <Grid item xs={12} sm={4}>
