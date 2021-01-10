@@ -9,6 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import MaskedInput from 'react-text-mask';
 import request from '../../services/api';
 
@@ -54,6 +55,12 @@ export default function Form(
 
     const [disabled, setDisabled] = useState(true);
 
+    const parseAPIIDistricts = () => {
+      request.get('estados/RJ/municipios')
+        .then(data => console.log('DATA IS', data))
+        .catch(err => console.log('ERR', err));
+    }
+
     const parseAPIUF = () => {
       request.get('estados')
       .then(data => {
@@ -72,6 +79,7 @@ export default function Form(
 
     useEffect(() => {
       parseAPIUF();
+      parseAPIIDistricts();
     }, []);
 
     const parseUFMenuItems = () => {
@@ -96,8 +104,24 @@ export default function Form(
                 value={values['address']} onChange={fieldHandler} error={errors['address']} />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField id="city" name="city" label="City" placeholder="City Name..." value={values['city']} 
-                onChange={fieldHandler} error={errors['city']} />
+            <Autocomplete
+              freeSolo
+              value={values['city']}
+              options={ ['City A', 'City B', 'City C'] }
+              onSelect={ (item) => fieldHandler(item) }
+              onChange={ (event) => fieldHandler(event) }
+              renderInput={ (params) => {
+                const inputProps = params.inputProps;
+                inputProps.autoComplete = 'new-city';
+                return <TextField 
+                  { ...params }
+                  inputProps={inputProps}
+                  id="city" 
+                  name="city" 
+                  label="City" 
+                  placeholder="City Name..." 
+                  error={errors['city']} /> }}
+            />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={fieldHandler} error={errors['uf']}>
