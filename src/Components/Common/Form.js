@@ -9,7 +9,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import MaskedInput from 'react-text-mask';
 import request from '../../services/api';
 
@@ -54,11 +53,19 @@ export default function Form(
     const classes = useStyles();
 
     const [disabled, setDisabled] = useState(true);
+    const defaultUF = ['RJ', 'SP', 'ES', 'MG'];
+    const [UF, setUF] = useState([]);
+    const apiErrorMessage = 'There was an error performing the request';
 
-    const parseAPIIDistricts = () => {
-      request.get('estados/RJ/municipios')
-        .then(data => console.log('DATA IS', data))
-        .catch(err => console.log('ERR', err));
+    const parseAPIIDistricts = (uf) => {
+      if(!uf) return;
+
+      request.get(`estados/${uf}/municipios`)
+        .then(data => {
+          const parsed = data['data'].reduce((acc, curr) => acc.concat({ name: curr['nome'] }), []);
+          // todo - set the parsed data into the autocomplete input...
+        })
+        .catch(err => console.log(`${apiErrorMessage}: ${err}`));
     }
 
     const parseAPIUF = () => {
@@ -69,22 +76,24 @@ export default function Form(
         setUF(parsedUF);
       })
       .catch(err => {
-        console.log(`There was an error performing the request: ${err}`);
+        console.log(`${apiErrorMessage}: ${err}`);
         setUF(defaultUF);
       });
     };
 
-    const defaultUF = ['rj', 'sp', 'es', 'mg'];
-    const [UF, setUF] = useState([]);
-
     useEffect(() => {
       parseAPIUF();
-      parseAPIIDistricts();
+      parseAPIIDistricts(values['uf']);
     }, []);
 
     const parseUFMenuItems = () => {
       return UF.map(item => <MenuItem key={item} value={item}>{item.toUpperCase()}</MenuItem>)
     };
+
+    const onUFChange = (event) => {
+      fieldHandler(event);
+      parseAPIIDistricts(event.target.value);
+    }
 
     const fieldHandler = (event) => {
       setDisabled(false);
@@ -104,27 +113,17 @@ export default function Form(
                 value={values['address']} onChange={fieldHandler} error={errors['address']} />
             </Grid>
             <Grid item xs={12} sm={4}>
-            <Autocomplete
-              freeSolo
-              value={values['city']}
-              options={ ['City A', 'City B', 'City C'] }
-              onSelect={ (item) => fieldHandler(item) }
-              onChange={ (event) => fieldHandler(event) }
-              renderInput={ (params) => {
-                const inputProps = params.inputProps;
-                inputProps.autoComplete = 'new-city';
-                return <TextField 
-                  { ...params }
-                  inputProps={inputProps}
-                  id="city" 
-                  name="city" 
-                  label="City" 
-                  placeholder="City Name..." 
-                  error={errors['city']} /> }}
-            />
+            <TextField 
+                id="city" 
+                name="city" 
+                label="City" 
+                placeholder="City Name..." 
+                value={ values['city'] }
+                onChange={ (event) => fieldHandler(event) }
+                error={errors['city']} />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={fieldHandler} error={errors['uf']}>
+              <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={onUFChange} error={errors['uf']}>
                 { parseUFMenuItems() }
               </TextField>
             </Grid>
