@@ -11,6 +11,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import MaskedInput from 'react-text-mask';
 import request from '../../services/api';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -54,7 +55,8 @@ export default function Form(
 
     const [disabled, setDisabled] = useState(true);
     const defaultUF = ['RJ', 'SP', 'ES', 'MG'];
-    const [UF, setUF] = useState([]);
+    const [UF, setUF] = useState([values['uf']]);
+    const [districts, setDistricts] = useState([]);
     const apiErrorMessage = 'There was an error performing the request';
 
     const parseAPIIDistricts = (uf) => {
@@ -62,8 +64,8 @@ export default function Form(
 
       request.get(`estados/${uf}/municipios`)
         .then(data => {
-          const parsed = data['data'].reduce((acc, curr) => acc.concat({ name: curr['nome'] }), []);
-          // todo - set the parsed data into the autocomplete input...
+          const parsed = data['data'].reduce((acc, curr) => acc.concat(curr['nome']), []);
+          setDistricts(parsed);
         })
         .catch(err => console.log(`${apiErrorMessage}: ${err}`));
     }
@@ -113,14 +115,25 @@ export default function Form(
                 value={values['address']} onChange={fieldHandler} error={errors['address']} />
             </Grid>
             <Grid item xs={12} sm={4}>
-            <TextField 
+              <Autocomplete 
+                value={ values['city'] }
                 id="city" 
                 name="city" 
-                label="City" 
-                placeholder="City Name..." 
-                value={ values['city'] }
-                onChange={ (event) => fieldHandler(event) }
-                error={errors['city']} />
+                options={ districts }
+                getOptionLabel={ option => option }
+                onChange={(event, value) => { fieldHandler({ target: { name: 'city', value } }) }}
+                renderInput={(params) => {
+                  params['inputProps']['autoComplete'] = 'new-city';
+                  return (
+                    <TextField
+                      inputProps={params['inputProps']}
+                      {...params}
+                      label="City" 
+                      placeholder="City Name..."
+                      error={errors['city']} />
+                  );
+                }}
+              />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={onUFChange} error={errors['uf']}>
