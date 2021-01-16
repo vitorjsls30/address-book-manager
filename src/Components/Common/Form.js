@@ -54,9 +54,13 @@ export default function Form(
     const classes = useStyles();
 
     const [disabled, setDisabled] = useState(true);
+
     const defaultUF = ['RJ', 'SP', 'ES', 'MG'];
     const [UF, setUF] = useState([values['uf']]);
+
     const [districts, setDistricts] = useState([]);
+    const [apiErr, setApiErr] = useState(false);
+
     const apiErrorMessage = 'There was an error performing the request';
 
     const parseAPIIDistricts = (uf) => {
@@ -64,10 +68,13 @@ export default function Form(
 
       request.get(`estados/${uf}/municipios`)
         .then(data => {
-          const parsed = data['data'].reduce((acc, curr) => acc.concat(curr['nome']), []);
+          const parsed = data['data'].reduce((acc, curr) => acc.concat({name: curr['nome']}), []);
           setDistricts(parsed);
         })
-        .catch(err => console.log(`${apiErrorMessage}: ${err}`));
+        .catch(err => { 
+          console.log(`${apiErrorMessage}: ${err}`);
+          setApiErr(true); 
+        });
     }
 
     const parseAPIUF = () => {
@@ -80,6 +87,7 @@ export default function Form(
       .catch(err => {
         console.log(`${apiErrorMessage}: ${err}`);
         setUF(defaultUF);
+        setApiErr(true);
       });
     };
 
@@ -98,9 +106,21 @@ export default function Form(
     }
 
     const fieldHandler = (event) => {
+      if(!event) return;
+
       setDisabled(false);
       handleChange(event);
     };
+
+    const handleAutocomplete = (event, value) => {
+      if(!event) return;
+
+      if(value) {
+        event['target'] = {...event['target'], value: value['name']};
+      }
+      event['target']['name'] = 'city';
+      fieldHandler(event);
+    }
 
     return(
       <main className={ classes.layout }>
@@ -115,13 +135,15 @@ export default function Form(
                 value={values['address']} onChange={fieldHandler} error={errors['address']} />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <Autocomplete 
-                value={ values['city'] }
+              <Autocomplete
+                freeSolo={apiErr}
+                value={{name: values['city']}}
+                onChange={(event, value) => handleAutocomplete(event, value)}
                 id="city" 
                 name="city" 
-                options={ districts }
-                getOptionLabel={ option => option }
-                onChange={(event, value) => { fieldHandler({ target: { name: 'city', value } }) }}
+                options={districts}
+                getOptionLabel={option => option.name}
+                onInputChange={(event) => handleAutocomplete(event)}
                 renderInput={(params) => {
                   params['inputProps']['autoComplete'] = 'new-city';
                   return (
