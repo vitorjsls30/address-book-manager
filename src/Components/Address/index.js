@@ -38,7 +38,6 @@ export default function Address(props) {
     if(event.target.type == 'checkbox') {
       value = event.target.checked;
     }
-
     setFormData({ ...formData, [event.target.name]: value });
     setErrors({ ...errors, [event.target.name]: false });
   }

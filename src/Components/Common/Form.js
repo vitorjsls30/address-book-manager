@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -10,6 +10,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import MaskedInput from 'react-text-mask';
+import request from '../../services/api';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -53,10 +55,72 @@ export default function Form(
 
     const [disabled, setDisabled] = useState(true);
 
+    const defaultUF = ['RJ', 'SP', 'ES', 'MG'];
+    const [UF, setUF] = useState([values['uf']]);
+
+    const [districts, setDistricts] = useState([]);
+    const [apiErr, setApiErr] = useState(false);
+
+    const apiErrorMessage = 'There was an error performing the request';
+
+    const parseAPIIDistricts = (uf) => {
+      if(!uf) return;
+
+      request.get(`estados/${uf}/municipios`)
+        .then(data => {
+          const parsed = data['data'].reduce((acc, curr) => acc.concat({name: curr['nome']}), []);
+          setDistricts(parsed);
+        })
+        .catch(err => { 
+          console.log(`${apiErrorMessage}: ${err}`);
+          setApiErr(true); 
+        });
+    }
+
+    const parseAPIUF = () => {
+      request.get('estados')
+      .then(data => {
+        let parsedUF = data['data'].reduce((acc, curr) => acc.concat(curr['sigla']), []);
+        parsedUF = parsedUF.sort((a, b) => a > b ? 1 : -1);
+        setUF(parsedUF);
+      })
+      .catch(err => {
+        console.log(`${apiErrorMessage}: ${err}`);
+        setUF(defaultUF);
+        setApiErr(true);
+      });
+    };
+
+    useEffect(() => {
+      parseAPIUF();
+      parseAPIIDistricts(values['uf']);
+    }, []);
+
+    const parseUFMenuItems = () => {
+      return UF.map(item => <MenuItem key={item} value={item}>{item.toUpperCase()}</MenuItem>)
+    };
+
+    const onUFChange = (event) => {
+      fieldHandler(event);
+      parseAPIIDistricts(event.target.value);
+    }
+
     const fieldHandler = (event) => {
+      if(!event) return;
+
       setDisabled(false);
       handleChange(event);
     };
+
+    const handleAutocomplete = (event, value) => {
+      if(!event) return;
+
+      if(value) {
+        event['target'] = {...event['target'], value: value['name']};
+      }
+      event['target']['name'] = 'city';
+      fieldHandler(event);
+    }
 
     return(
       <main className={ classes.layout }>
@@ -71,14 +135,31 @@ export default function Form(
                 value={values['address']} onChange={fieldHandler} error={errors['address']} />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField id="city" name="city" label="City" placeholder="City Name..." value={values['city']} 
-                onChange={fieldHandler} error={errors['city']} />
+              <Autocomplete
+                freeSolo={apiErr}
+                onChange={(event, value) => handleAutocomplete(event, value)}
+                id="city" 
+                name="city" 
+                options={districts}
+                getOptionLabel={option => option.name}
+                inputValue={values['city']}
+                onInputChange={(event) => handleAutocomplete(event)}
+                renderInput={(params) => {
+                  params['inputProps']['autoComplete'] = 'new-city';
+                  return (
+                    <TextField
+                      inputProps={params['inputProps']}
+                      {...params}
+                      label="City" 
+                      placeholder="City Name..."
+                      error={errors['city']} />
+                  );
+                }}
+              />
             </Grid>
             <Grid item xs={12} sm={4}>
-              <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={fieldHandler} error={errors['uf']}>
-                <MenuItem key="rj" value="rj">RJ</MenuItem>
-                <MenuItem key="sp" value="sp">SP</MenuItem>
-                <MenuItem key="es" value="es">ES</MenuItem>
+              <TextField id="uf" name="uf" className={ classes.inputs } select label="UF" value={values['uf']} onChange={onUFChange} error={errors['uf']}>
+                { parseUFMenuItems() }
               </TextField>
             </Grid>
             <Grid item xs={12} sm={4}>
