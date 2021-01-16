@@ -137,12 +137,12 @@ export default function Form(
             <Grid item xs={12} sm={4}>
               <Autocomplete
                 freeSolo={apiErr}
-                value={{name: values['city']}}
                 onChange={(event, value) => handleAutocomplete(event, value)}
                 id="city" 
                 name="city" 
                 options={districts}
                 getOptionLabel={option => option.name}
+                inputValue={values['city']}
                 onInputChange={(event) => handleAutocomplete(event)}
                 renderInput={(params) => {
                   params['inputProps']['autoComplete'] = 'new-city';
